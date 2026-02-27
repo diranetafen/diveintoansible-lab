@@ -1,5 +1,3 @@
-version: '3.8' # if no version is specificed then v1 is assumed. Recommend v2 minimum
-
 services:
   ubuntu-c:
     hostname: ubuntu-c
@@ -10,7 +8,6 @@ services:
      - ${UBUNTUC_PORT_TTYD}:7681
     privileged: true
     volumes:
-     - /sys/fs/cgroup:/sys/fs/cgroup:ro
      - ${CONFIG}:/config
      - ${ANSIBLE_HOME}/shared:/shared
      - ${ANSIBLE_HOME}/ubuntu-c/ansible:/home/ansible
@@ -27,7 +24,6 @@ services:
      - ${UBUNTU1_PORT_TTYD}:7681
     privileged: true
     volumes:
-     - /sys/fs/cgroup:/sys/fs/cgroup:ro
      - ${CONFIG}:/config
      - ${ANSIBLE_HOME}/shared:/shared
      - ${ANSIBLE_HOME}/ubuntu1/ansible:/home/ansible
@@ -44,7 +40,6 @@ services:
      - ${UBUNTU2_PORT_TTYD}:7681
     privileged: true
     volumes:
-     - /sys/fs/cgroup:/sys/fs/cgroup:ro
      - ${CONFIG}:/config
      - ${ANSIBLE_HOME}/shared:/shared
      - ${ANSIBLE_HOME}/ubuntu2/ansible:/home/ansible
@@ -61,7 +56,6 @@ services:
      - ${UBUNTU3_PORT_TTYD}:7681
     privileged: true
     volumes:
-     - /sys/fs/cgroup:/sys/fs/cgroup:ro
      - ${CONFIG}:/config
      - ${ANSIBLE_HOME}/shared:/shared
      - ${ANSIBLE_HOME}/ubuntu3/ansible:/home/ansible
@@ -72,15 +66,12 @@ services:
   centos1:
     hostname: centos1
     container_name: centos1
-    image: spurin/diveintoansible:centos
-    #image: spurin/diveintoansible:centos-sshd-2222
+    image: spurin/diveintoansible:centos_stream
     ports: 
      - ${CENTOS1_PORT_SSHD}:22
-     #- ${CENTOS1_PORT_SSHD}:2222
      - ${CENTOS1_PORT_TTYD}:7681
     privileged: true
     volumes:
-     - /sys/fs/cgroup:/sys/fs/cgroup:ro
      - ${CONFIG}:/config
      - ${ANSIBLE_HOME}/shared:/shared
      - ${ANSIBLE_HOME}/centos1/ansible:/home/ansible
@@ -91,13 +82,12 @@ services:
   centos2:
     hostname: centos2
     container_name: centos2
-    image: spurin/diveintoansible:centos
+    image: spurin/diveintoansible:centos_stream
     ports: 
      - ${CENTOS2_PORT_SSHD}:22
      - ${CENTOS2_PORT_TTYD}:7681
     privileged: true
     volumes:
-     - /sys/fs/cgroup:/sys/fs/cgroup:ro
      - ${CONFIG}:/config
      - ${ANSIBLE_HOME}/shared:/shared
      - ${ANSIBLE_HOME}/centos2/ansible:/home/ansible
@@ -108,13 +98,12 @@ services:
   centos3:
     hostname: centos3
     container_name: centos3
-    image: spurin/diveintoansible:centos
+    image: spurin/diveintoansible:centos_stream
     ports: 
      - ${CENTOS3_PORT_SSHD}:22
      - ${CENTOS3_PORT_TTYD}:7681
     privileged: true
     volumes:
-     - /sys/fs/cgroup:/sys/fs/cgroup:ro
      - ${CONFIG}:/config
      - ${ANSIBLE_HOME}/shared:/shared
      - ${ANSIBLE_HOME}/centos3/ansible:/home/ansible
@@ -135,7 +124,7 @@ services:
     hostname: docker
     container_name: docker
     image: spurin/diveintoansible:dind
-    privileged: yes
+    privileged: true
     volumes:
      - ${ANSIBLE_HOME}/shared:/shared
     networks:
@@ -162,3 +151,10 @@ services:
 networks:
   diveinto.io:
     name: diveinto.io
+    # Canonical bridge interface name
+    #
+    # The setting below provides a friendly name for the bridge interface
+    # as seen in the likes of the ip command.  Use at your own discretion
+    #
+    #driver_opts:
+    #  com.docker.network.bridge.name: "diveinto.io"
